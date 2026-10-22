@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rosewood House — A Cinematic Photo Journey</title>
+<meta name="description" content="Explore The Rosewood House through a cinematic scroll journey: a modern two-storey house in warm red brick, charcoal-grey stone and dark teak — exterior, gate and brick driveway, foyer, living room, dining room, kitchen, master bedroom, pool and garden terrace.">
+<style>
+:root{--cream:#f8f1e7;--stone:#eee0cd;--ink:#26180f;--gold:#a34d28;--gold2:#d99a5b;--muted:#74604c;--panel:rgba(24,13,6,.55)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{font-family:Georgia,'Times New Roman',serif;background:#170f08;color:var(--cream);overflow-x:hidden}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+/* ---------- fixed cinematic stage ---------- */
+#stage{position:fixed;inset:0;z-index:1;overflow:hidden;background:#170f08}
+.scene{position:absolute;inset:0;opacity:0;will-change:opacity,transform;pointer-events:none}
+.scene img{width:100%;height:100%;object-fit:cover;transform-origin:center}
+#stage::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,7,3,.62),transparent 42%),linear-gradient(to bottom,rgba(10,7,3,.38),transparent 30%);pointer-events:none}
+#journey{height:1000vh;position:relative;z-index:0}
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 26px;background:linear-gradient(to bottom,rgba(12,9,4,.72),transparent)}
+.brand{font-size:20px;letter-spacing:.28em;text-transform:uppercase;color:var(--cream)}
+.brand span{color:var(--gold2)}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctl{background:rgba(15,11,5,.62);color:var(--cream);border:1px solid rgba(217,154,91,.55);border-radius:999px;padding:8px 16px;font-size:13px;letter-spacing:.08em}
+.ctl:hover{background:rgba(163,77,40,.88);color:#fff}
+#vol{width:90px;accent-color:var(--gold2);display:none}
+/* ---------- captions ---------- */
+#caption{position:fixed;left:0;right:0;bottom:96px;z-index:15;text-align:center;padding:0 20px;pointer-events:none;text-shadow:0 2px 18px rgba(0,0,0,.8)}
+#capKicker{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold2);margin-bottom:10px}
+#capTitle{font-size:clamp(30px,5.4vw,58px);font-weight:normal;letter-spacing:.04em;line-height:1.08}
+#capLine{margin-top:10px;font-style:italic;font-size:clamp(15px,2vw,20px);color:#f3ead6}
+#heroText{position:fixed;inset:0;z-index:14;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 22px;pointer-events:none;text-shadow:0 3px 24px rgba(0,0,0,.85)}
+#heroText .kick{font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold2)}
+#heroText h1{font-size:clamp(44px,8.5vw,104px);font-weight:normal;letter-spacing:.06em;margin:16px 0 12px}
+#heroText p{font-style:italic;font-size:clamp(17px,2.6vw,26px);color:#f6efdd;max-width:760px}
+#scrollHint{margin-top:44px;font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--cream);animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.85}50%{transform:translateY(9px);opacity:1}}
+/* ---------- rail + progress ---------- */
+#rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:18;display:flex;flex-direction:column;gap:11px}
+#rail button{width:13px;height:13px;border-radius:50%;border:1px solid var(--gold2);background:transparent;padding:0}
+#rail button.on{background:var(--gold2);box-shadow:0 0 10px rgba(217,154,91,.8)}
+#progressWrap{position:fixed;left:0;right:0;bottom:0;z-index:19;background:rgba(12,9,4,.66);backdrop-filter:blur(4px);padding:10px 22px 14px;display:flex;align-items:center;gap:16px}
+#barWrap{flex:1;height:4px;background:rgba(247,241,230,.22);border-radius:2px;overflow:hidden}
+#bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+#pct{font-size:13px;letter-spacing:.14em;min-width:86px;text-align:right}
+.navbtn{background:transparent;color:var(--cream);border:1px solid rgba(217,154,91,.55);border-radius:999px;padding:7px 15px;font-size:13px;letter-spacing:.08em}
+.navbtn:hover{background:rgba(163,77,40,.88)}
+/* ---------- content after journey ---------- */
+main{position:relative;z-index:5;background:var(--cream);color:var(--ink)}
+.wrap{max-width:1080px;margin:0 auto;padding:84px 24px}
+.eyebrow{font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);text-align:center}
+h2{font-size:clamp(30px,4.6vw,46px);font-weight:normal;text-align:center;margin:14px 0 18px}
+.lede{max-width:760px;margin:0 auto;text-align:center;color:var(--muted);font-size:18px;line-height:1.65}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:46px}
+.feat div{background:#fff;border:1px solid #e5d3b8;border-top:3px solid var(--gold2);padding:22px}
+.feat h3{font-size:19px;font-weight:normal;margin-bottom:8px}
+.feat p{color:var(--muted);line-height:1.55;font-size:15px}
+.route{background:var(--stone);border-top:1px solid #dfcdaa;border-bottom:1px solid #dfcdaa}
+.route ol{max-width:720px;margin:34px auto 0;line-height:2;font-size:17px;color:#55432f;padding-left:24px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:44px}
+.gallery figure{cursor:pointer;overflow:hidden;border-radius:6px;background:#ddd}
+.gallery img{width:100%;height:200px;object-fit:cover;transition:transform .5s}
+.gallery figure:hover img{transform:scale(1.05)}
+.gallery figcaption{padding:9px 12px;font-size:14px;background:#fff;color:var(--ink)}
+form{max-width:620px;margin:40px auto 0;background:#fff;border:1px solid #e5d3b8;padding:28px;border-radius:8px}
+form label{display:block;font-size:14px;letter-spacing:.06em;margin:16px 0 6px;color:#55432f}
+form input,form textarea{width:100%;padding:11px;border:1px solid #c9ad84;border-radius:5px;font-family:inherit;font-size:16px;background:#fffaf1}
+form button{margin-top:20px;background:var(--gold);color:#fff;border:none;border-radius:999px;padding:12px 28px;font-size:15px;letter-spacing:.06em}
+#formOut{display:none;margin-top:18px;background:#fbf3e6;border:1px dashed var(--gold);padding:16px;font-size:15px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+footer{background:#1c110a;color:#d3bda0;padding:60px 24px 90px}
+footer .wrap{padding:0}
+footer h3{color:var(--cream);font-weight:normal;font-size:22px;margin-bottom:14px}
+footer p,footer li{line-height:1.7;font-size:15px}
+footer ul{padding-left:20px;margin-top:8px}
+footer .fine{margin-top:30px;font-size:13px;color:#a08a6c;text-align:center}
+/* ---------- lightbox ---------- */
+#lightbox{position:fixed;inset:0;z-index:60;background:rgba(8,6,3,.94);display:none;flex-direction:column;align-items:center;justify-content:center;padding:22px}
+#lightbox.open{display:flex}
+#lightbox img{max-width:min(1100px,94vw);max-height:76vh;object-fit:contain;border-radius:6px}
+#lbCap{margin-top:14px;font-style:italic;color:var(--cream)}
+.lbrow{display:flex;gap:12px;margin-top:16px}
+@media (prefers-reduced-motion:reduce){#scrollHint{animation:none}}
+@media (max-width:700px){
+ #rail{right:10px;gap:8px}
+ #rail button{width:10px;height:10px}
+ #caption{bottom:118px}
+ #vol{display:none!important}
+ header{padding:12px 14px}
+ .brand{font-size:15px}
+ .wrap{padding:60px 18px}
+}
+</style>
+</head>
+<body>
+<div id="stage" aria-hidden="true"></div>
+<div id="journey"></div>
+
+<header>
+  <div class="brand">The <span>Rosewood</span> House</div>
+  <div class="controls">
+    <button class="ctl" id="soundBtn" type="button">Sound: Off</button>
+    <input type="range" id="vol" min="0" max="100" value="55" aria-label="Ambient volume">
+    <button class="ctl" id="skipTop" type="button">Skip Tour</button>
+  </div>
+</header>
+
+<div id="heroText">
+  <div class="kick">A Cinematic Photo Journey</div>
+  <h1>The Rosewood House</h1>
+  <p>Warm red brick, charcoal stone and dark teak under a steep pitched roof — one house, told in ten scenes.</p>
+  <div id="scrollHint">Scroll to Explore &#8595;</div>
+</div>
+
+<div id="caption" style="opacity:0">
+  <div id="capKicker"></div>
+  <div id="capTitle"></div>
+  <div id="capLine"></div>
+</div>
+
+<nav id="rail" aria-label="Scenes"></nav>
+
+<div id="progressWrap">
+  <button class="navbtn" id="replayBtn" type="button">&#8635; Replay</button>
+  <div id="barWrap"><div id="bar"></div></div>
+  <div id="pct">Scene 1 / 10 &middot; 0%</div>
+  <button class="navbtn" id="skipBtn" type="button">Skip &#8594;</button>
+</div>
+
+<main id="details">
+  <section class="wrap">
+    <div class="eyebrow">The Property</div>
+    <h2>One House, Seen Properly</h2>
+    <p class="lede">Every feature below is taken only from what the ten photographs actually show — a modern two-storey house in warm red brick and charcoal-grey stone, with dark teak woodwork, a steep dark-grey pitched roof and large warm-lit glass windows, standing among frangipani and rain trees. No price, location, size or review has been invented, because none exists for this design concept.</p>
+    <div class="feat">
+      <div><h3>Exterior Front</h3><p>Warm red brick over a charcoal-grey stone ground floor, dark teak panelling and window frames, and a steep dark-grey pitched roof — with lawns, flowering frangipani and tall rain trees in front.</p></div>
+      <div><h3>Gate &amp; Driveway</h3><p>Heavy dark-teak gates open onto a herringbone brick driveway that curves up to the front door, shaded by a flowering frangipani.</p></div>
+      <div><h3>Entrance Foyer</h3><p>An oversized teak pivot door, a dark stone floor and a teak staircase with black railings, lit by warm globe pendants.</p></div>
+      <div><h3>Living Room</h3><p>Exposed brick walls, a beamed teak ceiling and a charcoal stone fireplace, with wide doors opening straight onto the garden.</p></div>
+      <div><h3>Dining Room</h3><p>A long teak dining table beneath glass pendant lights, in a teak-panelled room whose openings frame the garden on both sides.</p></div>
+      <div><h3>Kitchen</h3><p>Full-height teak cabinetry, an exposed brick backsplash and a charcoal stone island with woven stools, plus built-in ovens and folding glass doors to the garden.</p></div>
+      <div><h3>Master Bedroom</h3><p>A vaulted teak ceiling over brick and teak-panelled walls, with glazed doors opening to the garden on both sides of the bed.</p></div>
+      <div><h3>Swimming Pool</h3><p>A rectangular pool edged in charcoal stone and dark teak decking, lined with sun loungers and facing the warm-lit rear of the house.</p></div>
+      <div><h3>Garden Terrace</h3><p>A broad teak deck with deep outdoor sofas, set in planted gardens of frangipani and rain trees behind the house.</p></div>
+      <div><h3>By Night</h3><p>Seen from above after dark — glowing windows, the lit pool behind the house, the brick drive and garden lights scattered through the trees.</p></div>
+    </div>
+  </section>
+
+  <section class="route"><div class="wrap">
+    <div class="eyebrow">The Journey</div>
+    <h2>The Route Through the House</h2>
+    <ol>
+      <li>Exterior Front</li><li>Gate &amp; Driveway</li><li>Foyer</li><li>Living Room</li>
+      <li>Dining Room</li><li>Kitchen</li><li>Master Bedroom</li><li>Swimming Pool</li>
+      <li>Garden Terrace</li><li>Night Drone</li>
+    </ol>
+  </div></section>
+
+  <section class="wrap">
+    <div class="eyebrow">Gallery</div>
+    <h2>The Ten Scenes</h2>
+    <p class="lede">Select any photograph to view it larger.</p>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="wrap" style="padding-top:0">
+    <div class="eyebrow">Enquiries</div>
+    <h2>Ask About The Rosewood House</h2>
+    <p class="lede">This is a demonstration form only — it does not send anything. It prepares your message so you can copy it, or open it in your own email app.</p>
+    <form id="enquiry">
+      <label for="fName">Your name</label>
+      <input id="fName" type="text" autocomplete="name" placeholder="Your name">
+      <label for="fContact">Email or phone</label>
+      <input id="fContact" type="text" autocomplete="email" placeholder="How can you be reached?">
+      <label for="fMsg">Message</label>
+      <textarea id="fMsg" rows="4" placeholder="I would like to know more about The Rosewood House..."></textarea>
+      <button type="submit">Prepare My Message</button>
+      <div id="formOut"></div>
+    </form>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <h3>About This Experience</h3>
+  <p>This website is a <strong>photo-based cinematic journey</strong>. It presents ten photographs of one consistent house — The Rosewood House — as a smooth, scroll-controlled film. It is <strong>not</strong> a true 3D reconstruction: no 3D model of the house exists behind these images, and the spaces between photographs are bridged by camera-style motion (slow zoom, pan and crossfade), not by real geometry.</p>
+  <p style="margin-top:12px"><strong>About the photographs:</strong> The Rosewood House is a <strong>design concept house</strong>. The ten images on this page are an <strong>AI-generated photo set</strong> created for this presentation — they are not photographs of a built or listed property, and nothing on this page should be read as an offer of a real house for sale or rent.</p>
+  <h3 style="margin-top:28px">Replacing the Photographs</h3>
+  <p>To show a different property in exactly the same journey:</p>
+  <ul>
+    <li>Replace the files <strong>01.webp</strong> to <strong>10.webp</strong> beside this page, keeping the same file names.</li>
+    <li>Keep the same order: 01 exterior, 02 gate &amp; driveway, 03 foyer, 04 living, 05 dining, 06 kitchen, 07 bedroom, 08 pool, 09 garden terrace, 10 night / aerial.</li>
+    <li>Use landscape images of a similar size for the smoothest result, then reload the page.</li>
+  </ul>
+  <p class="fine">The Rosewood House — a cinematic photo journey through an AI-generated design concept. Presentation only; no price, location or availability is stated or implied.</p>
+</div></footer>
+
+<div id="lightbox" role="dialog" aria-label="Photo viewer">
+  <img id="lbImg" src="" alt="">
+  <div id="lbCap"></div>
+  <div class="lbrow">
+    <button class="ctl" id="lbPrev" type="button">&#8592; Prev</button>
+    <button class="ctl" id="lbClose" type="button">Close</button>
+    <button class="ctl" id="lbNext" type="button">Next &#8594;</button>
+  </div>
+</div>
+<script>
+"use strict";
+var SCENES=[
+ {f:"01.webp",k:"Scene 01 — Arrival",t:"The Arrival",l:"Red brick, charcoal stone and dark teak — the house glows between the rain trees."},
+ {f:"02.webp",k:"Scene 02 — Entrance",t:"The Gate & Driveway",l:"Teak gates swing open on a herringbone brick drive, frangipani overhead."},
+ {f:"03.webp",k:"Scene 03 — Interior",t:"The Foyer",l:"A tall teak pivot door, a teak stair, and warm globe light to welcome you in."},
+ {f:"04.webp",k:"Scene 04 — Interior",t:"The Living Room",l:"Exposed brick, a charcoal stone fireplace, and doors thrown open to the garden."},
+ {f:"05.webp",k:"Scene 05 — Interior",t:"The Dining Room",l:"A long teak table under glass pendants, with the garden framed on both sides."},
+ {f:"06.webp",k:"Scene 06 — Interior",t:"The Kitchen",l:"Teak cabinetry, a brick backsplash and a stone island made for gathering."},
+ {f:"07.webp",k:"Scene 07 — Interior",t:"The Master Bedroom",l:"A vaulted teak ceiling, and garden doors on either side of the bed."},
+ {f:"08.webp",k:"Scene 08 — Exterior",t:"The Swimming Pool",l:"Still water, stone and teak decking, and the house lit up behind the frangipani."},
+ {f:"09.webp",k:"Scene 09 — Exterior",t:"The Garden Terrace",l:"A broad teak deck, deep sofas and the rear facade in evening light."},
+ {f:"10.webp",k:"Scene 10 — Finale",t:"Nightfall, From Above",l:"Roof, brick drive, glowing pool and garden lights — seen, finally, as a whole."}
+];
+var N=SCENES.length, stage=document.getElementById("stage"), els=[];
+SCENES.forEach(function(s,i){
+  var d=document.createElement("div"); d.className="scene";
+  var im=document.createElement("img"); im.src=s.f; im.alt=s.t; if(i>1){im.loading="lazy";}
+  d.appendChild(im); stage.appendChild(d); els.push(d);
+});
+/* gallery */
+var gallery=document.getElementById("gallery");
+SCENES.forEach(function(s,i){
+  var fig=document.createElement("figure");
+  var im=document.createElement("img"); im.src=s.f; im.alt=s.t; im.loading="lazy";
+  var cap=document.createElement("figcaption"); cap.textContent=(i+1)+". "+s.t;
+  fig.appendChild(im); fig.appendChild(cap);
+  fig.addEventListener("click",function(){openLB(i);});
+  gallery.appendChild(fig);
+});
+/* rail */
+var rail=document.getElementById("rail"), dots=[];
+SCENES.forEach(function(s,i){
+  var b=document.createElement("button"); b.type="button"; b.title=s.t; b.setAttribute("aria-label",s.t);
+  b.addEventListener("click",function(){goToScene(i);});
+  rail.appendChild(b); dots.push(b);
+});
+function journeyH(){return document.getElementById("journey").offsetHeight-window.innerHeight;}
+function targetProgress(){
+  var h=journeyH(); if(h<=0)return 0;
+  var p=window.scrollY/h; return Math.max(0,Math.min(1,p));
+}
+function goToScene(i){
+  var h=journeyH(); var y=(i/(N-1))*h;
+  window.scrollTo({top:y,behavior:"smooth"});
+}
+function skipToDetails(){
+  var h=journeyH();
+  window.scrollTo({top:h+window.innerHeight*0.9,behavior:"smooth"});
+}
+document.getElementById("skipBtn").addEventListener("click",skipToDetails);
+document.getElementById("skipTop").addEventListener("click",skipToDetails);
+document.getElementById("replayBtn").addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+
+var capEl=document.getElementById("caption"), capK=document.getElementById("capKicker"),
+    capT=document.getElementById("capTitle"), capL=document.getElementById("capLine"),
+    hero=document.getElementById("heroText"), bar=document.getElementById("bar"),
+    pct=document.getElementById("pct");
+var cur=0, mx=0, my=0, tmx=0, tmy=0, lastCap=-1;
+var small=window.innerWidth<700, reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+window.addEventListener("mousemove",function(e){
+  if(small||reduce)return;
+  tmx=(e.clientX/window.innerWidth-0.5)*2; tmy=(e.clientY/window.innerHeight-0.5)*2;
+});
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function frame(){
+  var tp=targetProgress();
+  var d=tp-cur;
+  /* velocity limit: never move more than a small step per frame */
+  var maxStep=0.0045; if(d>maxStep)d=maxStep; if(d<-maxStep)d=-maxStep;
+  cur+=d*0.14 + (Math.abs(tp-cur)>0.02? d*0.5 : 0);
+  if(Math.abs(tp-cur)<0.00005)cur=tp;
+  cur=clamp(cur,0,1);
+  mx+=(tmx-mx)*0.04; my+=(tmy-my)*0.04;
+  var pos=cur*(N-1);
+  for(var i=0;i<N;i++){
+    var dist=Math.abs(pos-i);
+    var op=clamp(1-dist,0,1); op=op*op*(3-2*op);
+    var lp=clamp(pos-i+0.5,0,1);
+    var dir=(i%2===0)?1:-1;
+    var sc=reduce?1.04:(1.07+0.11*lp);
+    var tx=reduce?0:(dir*(lp-0.5)*2.4 + mx*0.7);
+    var ty=reduce?0:((lp-0.5)*1.2 + my*0.5);
+    els[i].style.opacity=op.toFixed(3);
+    els[i].firstChild.style.transform="scale("+sc.toFixed(3)+") translate("+tx.toFixed(2)+"%, "+ty.toFixed(2)+"%)";
+  }
+  var active=Math.round(pos);
+  if(active!==lastCap){
+    lastCap=active; var s=SCENES[active];
+    capK.textContent=s.k; capT.textContent=s.t; capL.textContent=s.l;
+    dots.forEach(function(dt,j){dt.className=(j===active)?"on":"";});
+  }
+  capEl.style.opacity=(cur<0.015||cur>0.995)?"0":"1";
+  hero.style.opacity=(cur<0.02)?String(1-cur*40):"0";
+  hero.style.pointerEvents="none";
+  var past=window.scrollY>journeyH()+window.innerHeight*0.55;
+  stage.style.opacity=past?"0":"1"; stage.style.pointerEvents=past?"none":"auto";
+  document.querySelector("header").style.opacity=past?"0":"1";
+  capEl.style.visibility=past?"hidden":"visible";
+  rail.style.visibility=past?"hidden":"visible";
+  document.getElementById("progressWrap").style.visibility=past?"hidden":"visible";
+  hero.style.visibility=past?"hidden":"visible";
+  bar.style.width=(cur*100).toFixed(1)+"%";
+  pct.textContent="Scene "+(active+1)+" / "+N+" · "+Math.round(cur*100)+"%";
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ---------- ambient sound (WebAudio, starts only on tap) ---------- */
+var actx=null, master=null, soundOn=false;
+function buildAudio(){
+  actx=new (window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain(); master.gain.value=0; master.connect(actx.destination);
+  var filt=actx.createBiquadFilter(); filt.type="lowpass"; filt.frequency.value=720; filt.connect(master);
+  [196.00,246.94,293.66,392.00].forEach(function(fr,i){
+    var o=actx.createOscillator(); o.type=i<2?"sine":"triangle"; o.frequency.value=fr; o.detune.value=(i-1.5)*4;
+    var g=actx.createGain(); g.gain.value=i<2?0.05:0.018;
+    var lfo=actx.createOscillator(); lfo.frequency.value=0.05+i*0.023;
+    var lg=actx.createGain(); lg.gain.value=0.012; lfo.connect(lg); lg.connect(g.gain);
+    o.connect(g); g.connect(filt); o.start(); lfo.start();
+  });
+}
+var soundBtn=document.getElementById("soundBtn"), vol=document.getElementById("vol");
+soundBtn.addEventListener("click",function(){
+  if(!actx)buildAudio();
+  if(actx.state==="suspended")actx.resume();
+  soundOn=!soundOn;
+  var v=parseInt(vol.value,10)/100;
+  master.gain.linearRampToValueAtTime(soundOn?v*0.5:0, actx.currentTime+0.8);
+  soundBtn.textContent=soundOn?"Sound: On":"Sound: Off";
+  vol.style.display=(soundOn&&window.innerWidth>=700)?"inline-block":"none";
+});
+vol.addEventListener("input",function(){
+  if(master&&soundOn)master.gain.value=(parseInt(vol.value,10)/100)*0.5;
+});
+
+/* ---------- enquiry form (demo, copy / mailto only) ---------- */
+document.getElementById("enquiry").addEventListener("submit",function(e){
+  e.preventDefault();
+  var nm=document.getElementById("fName").value.trim(),
+      ct=document.getElementById("fContact").value.trim(),
+      ms=document.getElementById("fMsg").value.trim();
+  var text="Enquiry — The Rosewood House\n\nName: "+(nm||"-")+"\nContact: "+(ct||"-")+"\nMessage: "+(ms||"-");
+  var out=document.getElementById("formOut");
+  out.style.display="block";
+  out.textContent="Demo form — nothing has been sent. Your prepared message:\n\n"+text+"\n\nUse the button below to copy it, or open it in your email app.";
+  var row=document.createElement("div"); row.style.marginTop="12px"; row.style.display="flex"; row.style.gap="10px";
+  var cb=document.createElement("button"); cb.type="button"; cb.className="ctl"; cb.style.color="#211a12"; cb.textContent="Copy Message";
+  cb.addEventListener("click",function(){
+    if(navigator.clipboard){navigator.clipboard.writeText(text); cb.textContent="Copied";}
+  });
+  var ml=document.createElement("a"); ml.className="ctl"; ml.style.color="#211a12"; ml.style.textDecoration="none";
+  ml.textContent="Open in Email App";
+  ml.href="mailto:?subject="+encodeURIComponent("Enquiry — The Rosewood House")+"&body="+encodeURIComponent(text);
+  row.appendChild(cb); row.appendChild(ml); out.appendChild(row);
+});
+
+/* ---------- lightbox ---------- */
+var lb=document.getElementById("lightbox"), lbImg=document.getElementById("lbImg"),
+    lbCap=document.getElementById("lbCap"), lbIdx=0;
+function openLB(i){lbIdx=i; showLB(); lb.className="open";}
+function showLB(){var s=SCENES[lbIdx]; lbImg.src=s.f; lbImg.alt=s.t; lbCap.textContent=(lbIdx+1)+" / "+N+" — "+s.t;}
+function closeLB(){lb.className="";}
+document.getElementById("lbClose").addEventListener("click",closeLB);
+document.getElementById("lbPrev").addEventListener("click",function(){lbIdx=(lbIdx-1+N)%N; showLB();});
+document.getElementById("lbNext").addEventListener("click",function(){lbIdx=(lbIdx+1)%N; showLB();});
+lb.addEventListener("click",function(e){if(e.target===lb)closeLB();});
+window.addEventListener("keydown",function(e){if(e.key==="Escape")closeLB();});
+</script>
+</body>
+</html>
